@@ -1,6 +1,3 @@
-import DeleteIcon from "../icons/delete.svg";
-import BotIcon from "../icons/bot.svg";
-
 import styles from "./home.module.scss";
 import {
   DragDropContext,
@@ -11,16 +8,15 @@ import {
 
 import { useChatStore } from "../store";
 
-import Locale from "../locales";
+import Locale, { Lang } from "../locales";
 import { Link, useNavigate } from "react-router-dom";
 import { Path } from "../constant";
 import { MaskAvatar } from "./mask";
-import { Mask } from "../store/mask";
-import { useRef, useEffect } from "react";
+import { Mask, useMaskStore } from "../store/mask";
+import { useRef, useEffect, useState } from "react";
 
 export function ChatItem(props: {
   onClick?: () => void;
-  onDelete?: () => void;
   title: string;
   count: number;
   time: string;
@@ -31,7 +27,19 @@ export function ChatItem(props: {
   mask: Mask;
 }) {
   const draggableRef = useRef<HTMLDivElement | null>(null);
+  const maskStore = useMaskStore();
+  const chatStore = useChatStore();
+  const [filterLang, setFilterLang] = useState<Lang>();
   useEffect(() => {
+    if (chatStore.sessions.length === 1) {
+      const allMasks = maskStore
+        .getAll()
+        .filter((m) => !filterLang || m.lang === filterLang);
+
+      allMasks.map((m) => {
+        chatStore.newSession(m);
+      });
+    }
     if (props.selected && draggableRef.current) {
       draggableRef.current?.scrollIntoView({
         block: "center",
@@ -76,13 +84,6 @@ export function ChatItem(props: {
               </div>
             </>
           )}
-
-          <div
-            className={styles["chat-item-delete"]}
-            onClickCapture={props.onDelete}
-          >
-            <DeleteIcon />
-          </div>
         </div>
       )}
     </Draggable>
@@ -98,7 +99,6 @@ export function ChatList(props: { narrow?: boolean }) {
       state.moveSession,
     ],
   );
-  const chatStore = useChatStore();
   const navigate = useNavigate();
 
   const onDragEnd: OnDragEndResponder = (result) => {
@@ -138,11 +138,6 @@ export function ChatList(props: { narrow?: boolean }) {
                 onClick={() => {
                   navigate(Path.Chat);
                   selectSession(i);
-                }}
-                onDelete={() => {
-                  if (!props.narrow || confirm(Locale.Home.DeleteChat)) {
-                    chatStore.deleteSession(i);
-                  }
                 }}
                 narrow={props.narrow}
                 mask={item.mask}
