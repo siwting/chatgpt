@@ -6,7 +6,7 @@ import {
   OnDragEndResponder,
 } from "@hello-pangea/dnd";
 
-import { useChatStore } from "../store";
+import { useChatStore } from "../store/chat";
 
 import Locale, { Lang } from "../locales";
 import { Link, useNavigate } from "react-router-dom";

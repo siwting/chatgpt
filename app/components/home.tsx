@@ -1,7 +1,5 @@
 "use client";
 
-import { useAccessStore } from "@/app/store";
-
 require("../polyfill");
 
 import { useState, useEffect } from "react";
@@ -20,7 +18,7 @@ import { ErrorBoundary } from "./error";
 import { getLang } from "../locales";
 
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Routes,
   Route,
   useLocation,
@@ -28,6 +26,7 @@ import {
 } from "react-router-dom";
 import { SideBar } from "./sidebar";
 import { useAppConfig } from "../store/config";
+import { useAccessStore } from "../store/access";
 import { getClientConfig } from "../config/client";
 
 export function Loading(props: { noLogo?: boolean }) {
