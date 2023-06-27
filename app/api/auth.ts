@@ -23,20 +23,7 @@ function parseApiKey(bearToken: string) {
   };
 }
 
-async function chackToken(accessCode: string, authUrl: any) {
-  const res = await fetch(authUrl + `/user/current`, {
-    method: "GET",
-    headers: {
-      Authorization: "Bearer " + accessCode,
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, PUT, DELETE",
-      Accept: "application/json",
-    },
-  });
-  return await res.json();
-}
-
-export async function auth(req: NextRequest) {
+export function auth(req: NextRequest) {
   const authToken = req.headers.get("Authorization") ?? "";
 
   // check if it is openai api key or user token
@@ -51,13 +38,6 @@ export async function auth(req: NextRequest) {
         msg: "empty access code",
       };
     }
-  }
-  const res = await chackToken(accessCode, serverConfig.authUrl);
-  if (res.Code !== 1000) {
-    return {
-      error: true,
-      msg: "access code is not valid",
-    };
   }
 
   // if user does not provide an api key, inject system api key

@@ -29,7 +29,22 @@ export function AuthPage() {
         placeholder={Locale.Auth.Input}
         value={access.accessCode}
         onChange={(e) => {
-          access.updateCode(e.currentTarget.value);
+          fetch(`https://account.test.xjjk.com/user/current`, {
+            method: "GET",
+            headers: {
+              Authorization: "Bearer " + e.currentTarget.value,
+              "Access-Control-Allow-Origin": "*",
+              "Access-Control-Allow-Methods": "POST, GET, OPTIONS, PUT, DELETE",
+              Accept: "application/json",
+            },
+          }).then((res) => {
+            res.json().then((data) => {
+              console.log(data);
+              if (data.Code === 1000) {
+                access.updateCode(e.currentTarget.value);
+              }
+            });
+          });
         }}
       />
 
