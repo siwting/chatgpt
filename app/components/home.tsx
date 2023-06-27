@@ -1,5 +1,7 @@
 "use client";
 
+import { useAccessStore } from "@/app/store";
+
 require("../polyfill");
 
 import { useState, useEffect } from "react";
@@ -18,15 +20,16 @@ import { ErrorBoundary } from "./error";
 import { getLang } from "../locales";
 
 import {
-  HashRouter as Router,
+  BrowserRouter as Router,
   Routes,
   Route,
   useLocation,
+  useSearchParams,
 } from "react-router-dom";
 import { SideBar } from "./sidebar";
 import { useAppConfig } from "../store/config";
-import { AuthPage } from "./auth";
 import { getClientConfig } from "../config/client";
+import { getServerSideConfig } from "@/app/config/server";
 
 export function Loading(props: { noLogo?: boolean }) {
   return (
@@ -107,16 +110,59 @@ const loadAsyncGoogleFont = () => {
   document.head.appendChild(linkEl);
 };
 
+/**
+ * xjjk认证中心登錄
+ */
+const xjjkLogin = (code: any, authUrl: string): any => {
+  return fetch(
+    `${authUrl}/oauth2/token?code=${code}&grant_type=xjjk_code&client_id=dc9af31456a04fc1ade26019200b2d5c`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, PUT, DELETE",
+        Accept: "application/json",
+      },
+    },
+  );
+};
+
 function Screen() {
   const config = useAppConfig();
+  const serverConfig = getServerSideConfig();
   const location = useLocation();
-  console.log("[Screen] location", location.pathname);
+  const access = useAccessStore();
   const isHome = location.pathname === Path.Home;
-  const isAuth = location.pathname === Path.Auth;
   const isMobileScreen = useMobileScreen();
-
+  const [param] = useSearchParams();
   useEffect(() => {
-    loadAsyncGoogleFont();
+    if (access.accessCode) {
+      loadAsyncGoogleFont();
+    } else {
+      if (param.get("code")) {
+        xjjkLogin(param.get("code"), serverConfig.authUrl).then(
+          (response: any) => {
+            response.json().then((data: any) => {
+              console.log("data", data);
+              access.updateCode(data.access_token);
+              loadAsyncGoogleFont();
+            });
+          },
+          (error: any) => {
+            console.log("联系服务器失败了", error);
+            return new Promise(() => {});
+          },
+        );
+      } else {
+        window.location.replace(
+          serverConfig.authUrl +
+            "/oauth2/authorize?response_type=code&client_id=dc9af31456a04fc1ade26019200b2d5c&redirect_uri=" +
+            serverConfig.webUrl +
+            "&scope=profile",
+        );
+      }
+    }
   }, []);
 
   return (
@@ -130,25 +176,19 @@ function Screen() {
         } ${getLang() === "ar" ? styles["rtl-screen"] : ""}`
       }
     >
-      {isAuth ? (
-        <>
-          <AuthPage />
-        </>
-      ) : (
-        <>
-          <SideBar className={isHome ? styles["sidebar-show"] : ""} />
+      <>
+        <SideBar className={isHome ? styles["sidebar-show"] : ""} />
 
-          <div className={styles["window-content"]} id={SlotID.AppBody}>
-            <Routes>
-              <Route path={Path.Home} element={<Chat />} />
-              <Route path={Path.NewChat} element={<NewChat />} />
-              <Route path={Path.Masks} element={<MaskPage />} />
-              <Route path={Path.Chat} element={<Chat />} />
-              <Route path={Path.Settings} element={<Settings />} />
-            </Routes>
-          </div>
-        </>
-      )}
+        <div className={styles["window-content"]} id={SlotID.AppBody}>
+          <Routes>
+            <Route path={Path.Home} element={<Chat />} />
+            <Route path={Path.NewChat} element={<NewChat />} />
+            <Route path={Path.Masks} element={<MaskPage />} />
+            <Route path={Path.Chat} element={<Chat />} />
+            <Route path={Path.Settings} element={<Settings />} />
+          </Routes>
+        </div>
+      </>
     </div>
   );
 }
