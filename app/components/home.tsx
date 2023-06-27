@@ -29,7 +29,6 @@ import {
 import { SideBar } from "./sidebar";
 import { useAppConfig } from "../store/config";
 import { getClientConfig } from "../config/client";
-import { getServerSideConfig } from "../config/server";
 
 export function Loading(props: { noLogo?: boolean }) {
   return (
@@ -153,12 +152,13 @@ function Screen() {
           },
         );
       } else {
-        window.location.replace(
-          access.authUrl +
-            "/oauth2/authorize?response_type=code&client_id=dc9af31456a04fc1ade26019200b2d5c&redirect_uri=" +
-            access.webUrl +
-            "&scope=profile",
-        );
+        console.log("跳转到认证中心", access);
+        // window.location.replace(
+        //   access.authUrl +
+        //     "/oauth2/authorize?response_type=code&client_id=dc9af31456a04fc1ade26019200b2d5c&redirect_uri=" +
+        //     access.webUrl +
+        //     "&scope=profile",
+        // );
       }
     }
   }, []);
