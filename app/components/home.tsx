@@ -151,13 +151,12 @@ function Screen() {
           },
         );
       } else {
-        console.log("跳转到认证中心", access);
-        // window.location.replace(
-        //   access.authUrl +
-        //     "/oauth2/authorize?response_type=code&client_id=dc9af31456a04fc1ade26019200b2d5c&redirect_uri=" +
-        //     access.webUrl +
-        //     "&scope=profile",
-        // );
+        window.location.replace(
+          access.authUrl +
+            "/oauth2/authorize?response_type=code&client_id=dc9af31456a04fc1ade26019200b2d5c&redirect_uri=" +
+            access.webUrl +
+            "&scope=profile",
+        );
       }
     }
   }, [access, param]);
