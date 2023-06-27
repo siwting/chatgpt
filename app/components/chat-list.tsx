@@ -45,7 +45,7 @@ export function ChatItem(props: {
         block: "center",
       });
     }
-  }, [props.selected]);
+  }, [props.selected, chatStore]);
   return (
     <Draggable draggableId={`${props.id}`} index={props.index}>
       {(provided) => (

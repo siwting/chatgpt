@@ -160,7 +160,7 @@ function Screen() {
         // );
       }
     }
-  }, []);
+  }, [access, param]);
 
   return (
     <div
