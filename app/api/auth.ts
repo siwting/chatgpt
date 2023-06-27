@@ -23,7 +23,7 @@ function parseApiKey(bearToken: string) {
   };
 }
 
-async function chackToken(accessCode: string, authUrl: string) {
+async function chackToken(accessCode: string, authUrl: any) {
   const res = await fetch(authUrl + `/user/current`, {
     method: "GET",
     headers: {

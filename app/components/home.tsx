@@ -29,7 +29,7 @@ import {
 import { SideBar } from "./sidebar";
 import { useAppConfig } from "../store/config";
 import { getClientConfig } from "../config/client";
-import { getServerSideConfig } from "@/app/config/server";
+import { getServerSideConfig } from "../config/server";
 
 export function Loading(props: { noLogo?: boolean }) {
   return (
@@ -130,7 +130,6 @@ const xjjkLogin = (code: any, authUrl: string): any => {
 
 function Screen() {
   const config = useAppConfig();
-  const serverConfig = getServerSideConfig();
   const location = useLocation();
   const access = useAccessStore();
   const isHome = location.pathname === Path.Home;
@@ -141,24 +140,23 @@ function Screen() {
       loadAsyncGoogleFont();
     } else {
       if (param.get("code")) {
-        xjjkLogin(param.get("code"), serverConfig.authUrl).then(
+        xjjkLogin(param.get("code"), access.authUrl).then(
           (response: any) => {
             response.json().then((data: any) => {
-              console.log("data", data);
               access.updateCode(data.access_token);
               loadAsyncGoogleFont();
             });
           },
           (error: any) => {
-            console.log("联系服务器失败了", error);
+            console.error("联系服务器失败了", error);
             return new Promise(() => {});
           },
         );
       } else {
         window.location.replace(
-          serverConfig.authUrl +
+          access.authUrl +
             "/oauth2/authorize?response_type=code&client_id=dc9af31456a04fc1ade26019200b2d5c&redirect_uri=" +
-            serverConfig.webUrl +
+            access.webUrl +
             "&scope=profile",
         );
       }

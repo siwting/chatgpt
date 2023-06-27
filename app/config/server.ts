@@ -4,7 +4,7 @@ declare global {
   namespace NodeJS {
     interface ProcessEnv {
       OPENAI_API_KEY?: string;
-      AUTH_URL: string;
+      AUTH_URL?: string;
       WEB_URL?: string;
       CODE?: string;
       BASE_URL?: string;
