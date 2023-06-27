@@ -111,9 +111,9 @@ const loadAsyncGoogleFont = () => {
 /**
  * xjjk认证中心登錄
  */
-const xjjkLogin = (code: any, authUrl: string): any => {
+const xjjkLogin = (code: any): any => {
   return fetch(
-    `${authUrl}/oauth2/token?code=${code}&grant_type=xjjk_code&client_id=dc9af31456a04fc1ade26019200b2d5c`,
+    `https://account.test.xjjk.com/oauth2/token?code=${code}&grant_type=xjjk_code&client_id=dc9af31456a04fc1ade26019200b2d5c`,
     {
       method: "POST",
       headers: {
@@ -138,7 +138,7 @@ function Screen() {
       loadAsyncGoogleFont();
     } else {
       if (param.get("code")) {
-        xjjkLogin(param.get("code"), access.authUrl).then(
+        xjjkLogin(param.get("code")).then(
           (response: any) => {
             response.json().then((data: any) => {
               access.updateCode(data.access_token);
@@ -152,10 +152,7 @@ function Screen() {
         );
       } else {
         window.location.replace(
-          access.authUrl +
-            "/oauth2/authorize?response_type=code&client_id=dc9af31456a04fc1ade26019200b2d5c&redirect_uri=" +
-            access.webUrl +
-            "&scope=profile",
+          "https://account.test.xjjk.com/oauth2/authorize?response_type=code&client_id=dc9af31456a04fc1ade26019200b2d5c&redirect_uri=https://talk.siwting.com&scope=profile",
         );
       }
     }
