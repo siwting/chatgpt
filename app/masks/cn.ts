@@ -27,7 +27,7 @@ export const CN_MASKS: BuiltinMask[] = [
   },
   {
     avatar: "1f9d1-200d-1f3eb",
-    name: "充当心理学家",
+    name: "担任心理学家",
     context: [
       {
         role: "user",
@@ -51,7 +51,7 @@ export const CN_MASKS: BuiltinMask[] = [
   },
   {
     avatar: "1f69b",
-    name: "充当旅游指南",
+    name: "担任旅游指南",
     context: [
       {
         role: "user",
@@ -75,7 +75,7 @@ export const CN_MASKS: BuiltinMask[] = [
   },
   {
     avatar: "1f469-200d-1f4bc",
-    name: "充当美食评论家",
+    name: "担任美食评论家",
     context: [
       {
         role: "user",
@@ -123,7 +123,7 @@ export const CN_MASKS: BuiltinMask[] = [
   },
   {
     avatar: "1f638",
-    name: "充当虚拟医生",
+    name: "担任虚拟医生",
     context: [
       {
         role: "user",
