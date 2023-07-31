@@ -29,7 +29,7 @@ export function AuthPage() {
         placeholder={Locale.Auth.Input}
         value={access.accessCode}
         onChange={(e) => {
-          fetch(`https://account.test.xjjk.com/user/current`, {
+          fetch(`https://account.xjjk.com/user/current`, {
             method: "GET",
             headers: {
               Authorization: "Bearer " + e.currentTarget.value,
