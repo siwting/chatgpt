@@ -152,7 +152,7 @@ function Screen() {
         );
       } else {
         window.location.replace(
-          "https://account.xjjk.com/oauth2/authorize?response_type=code&client_id=dc9af31456a04fc1ade26019200b2d5c&redirect_uri=https://talk.siwting.com&scope=profile",
+          "https://account.xjjk.com/oauth2/authorize?response_type=code&client_id=dc9af31456a04fc1ade26019200b2d5c&redirect_uri=https://"+window.location.host+"&scope=profile",
         );
       }
     }
