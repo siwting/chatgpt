@@ -9,10 +9,12 @@ const serverConfig = getServerSideConfig();
 const DANGER_CONFIG = {
   needCode: serverConfig.needCode,
   hideUserApiKey: serverConfig.hideUserApiKey,
-  enableGPT4: serverConfig.enableGPT4,
+  disableGPT4: serverConfig.disableGPT4,
   hideBalanceQuery: serverConfig.hideBalanceQuery,
   authUrl: serverConfig.authUrl,
   webUrl: serverConfig.webUrl,
+  disableFastLink: serverConfig.disableFastLink,
+  customModels: serverConfig.customModels,
 };
 
 declare global {
