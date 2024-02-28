@@ -162,7 +162,7 @@ function Screen() {
               access.update(
                 (access) => (access.accessCode = data.access_token),
               );
-              window.location.replace("http://" + window.location.host);
+              window.location.replace("https://" + window.location.host);
             });
           },
           (error: any) => {
@@ -172,7 +172,7 @@ function Screen() {
         );
       } else {
         window.location.replace(
-          "https://account.xjjk.com/oauth2/authorize?response_type=code&client_id=dc9af31456a04fc1ade26019200b2d5c&redirect_uri=http://" +
+          "https://account.xjjk.com/oauth2/authorize?response_type=code&client_id=dc9af31456a04fc1ade26019200b2d5c&redirect_uri=https://" +
             window.location.host +
             "&scope=profile",
         );
