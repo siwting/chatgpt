@@ -68,11 +68,11 @@ const cn = {
     Rename: "重命名对话",
     Typing: "正在输入…",
     Input: (submitKey: string) => {
-      var inputHints = `${submitKey} 发送`;
+      var inputHints = `请在此处输入客户想咨询的问题，按回车键即可发送`;
       if (submitKey === String(SubmitKey.Enter)) {
         inputHints += "，Shift + Enter 换行";
       }
-      return inputHints + "，/ 触发补全，: 触发命令";
+      return inputHints;
     },
     Send: "发送",
     Config: {
@@ -359,7 +359,7 @@ const cn = {
     },
   },
   Store: {
-    DefaultTopic: "新的聊天",
+    DefaultTopic: "随便聊聊",
     BotHello: "有什么可以帮你的吗",
     Error: "出错了，稍后重试吧",
     Prompt: {

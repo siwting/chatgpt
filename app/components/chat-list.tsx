@@ -1,6 +1,3 @@
-import DeleteIcon from "../icons/delete.svg";
-import BotIcon from "../icons/bot.svg";
-
 import styles from "./home.module.scss";
 import {
   DragDropContext,
@@ -11,12 +8,12 @@ import {
 
 import { useChatStore } from "../store";
 
-import Locale from "../locales";
+import Locale, { Lang } from "../locales";
 import { Link, useNavigate } from "react-router-dom";
 import { Path } from "../constant";
 import { MaskAvatar } from "./mask";
-import { Mask } from "../store/mask";
-import { useRef, useEffect } from "react";
+import { Mask, useMaskStore } from "../store/mask";
+import { useRef, useEffect, useState } from "react";
 import { showConfirm } from "./ui-lib";
 import { useMobileScreen } from "../utils";
 
@@ -33,7 +30,19 @@ export function ChatItem(props: {
   mask: Mask;
 }) {
   const draggableRef = useRef<HTMLDivElement | null>(null);
+  const maskStore = useMaskStore();
+  const chatStore = useChatStore();
+  const [filterLang, setFilterLang] = useState<Lang>();
   useEffect(() => {
+    if (chatStore.sessions.length === 1) {
+      const allMasks = maskStore
+        .getAll()
+        .filter((m) => !filterLang || m.lang === filterLang);
+
+      allMasks.map((m) => {
+        chatStore.newSession(m);
+      });
+    }
     if (props.selected && draggableRef.current) {
       draggableRef.current?.scrollIntoView({
         block: "center",
@@ -81,17 +90,6 @@ export function ChatItem(props: {
               </div>
             </>
           )}
-
-          <div
-            className={styles["chat-item-delete"]}
-            onClickCapture={(e) => {
-              props.onDelete?.();
-              e.preventDefault();
-              e.stopPropagation();
-            }}
-          >
-            <DeleteIcon />
-          </div>
         </div>
       )}
     </Draggable>

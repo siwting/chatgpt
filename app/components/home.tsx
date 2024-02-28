@@ -1,5 +1,7 @@
 "use client";
 
+import { getServerSideConfig } from "@/app/config/server";
+
 require("../polyfill");
 
 import { useState, useEffect } from "react";
@@ -22,6 +24,7 @@ import {
   Routes,
   Route,
   useLocation,
+  useSearchParams,
 } from "react-router-dom";
 import { SideBar } from "./sidebar";
 import { useAppConfig } from "../store/config";
@@ -122,17 +125,59 @@ const loadAsyncGoogleFont = () => {
   document.head.appendChild(linkEl);
 };
 
+const xjjkLogin = (code: any): any => {
+  return fetch(
+    `https://account.xjjk.com/oauth2/token?code=${code}&grant_type=xjjk_code&client_id=dc9af31456a04fc1ade26019200b2d5c`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, PUT, DELETE",
+        Accept: "application/json",
+      },
+    },
+  );
+};
+
 function Screen() {
   const config = useAppConfig();
   const location = useLocation();
   const isHome = location.pathname === Path.Home;
   const isAuth = location.pathname === Path.Auth;
   const isMobileScreen = useMobileScreen();
+  const access = useAccessStore();
+  const param = new URLSearchParams(window.location.search);
   const shouldTightBorder =
     getClientConfig()?.isApp || (config.tightBorder && !isMobileScreen);
 
   useEffect(() => {
-    loadAsyncGoogleFont();
+    if (access.accessCode) {
+      loadAsyncGoogleFont();
+    } else {
+      if (param.get("code")) {
+        xjjkLogin(param.get("code")).then(
+          (response: any) => {
+            response.json().then((data: any) => {
+              access.update(
+                (access) => (access.accessCode = data.access_token),
+              );
+              window.location.replace("http://" + window.location.host);
+            });
+          },
+          (error: any) => {
+            console.error("联系服务器失败了", error);
+            return new Promise(() => {});
+          },
+        );
+      } else {
+        window.location.replace(
+          "https://account.xjjk.com/oauth2/authorize?response_type=code&client_id=dc9af31456a04fc1ade26019200b2d5c&redirect_uri=http://" +
+            window.location.host +
+            "&scope=profile",
+        );
+      }
+    }
   }, []);
 
   return (

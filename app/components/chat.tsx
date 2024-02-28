@@ -1174,25 +1174,6 @@ function _Chat() {
           </div>
         </div>
         <div className="window-actions">
-          {!isMobileScreen && (
-            <div className="window-action-button">
-              <IconButton
-                icon={<RenameIcon />}
-                bordered
-                onClick={() => setIsEditingMessage(true)}
-              />
-            </div>
-          )}
-          <div className="window-action-button">
-            <IconButton
-              icon={<ExportIcon />}
-              bordered
-              title={Locale.Chat.Actions.Export}
-              onClick={() => {
-                setShowExport(true);
-              }}
-            />
-          </div>
           {showMaxIcon && (
             <div className="window-action-button">
               <IconButton
@@ -1411,26 +1392,6 @@ function _Chat() {
       <div className={styles["chat-input-panel"]}>
         <PromptHints prompts={promptHints} onPromptSelect={onPromptSelect} />
 
-        <ChatActions
-          uploadImage={uploadImage}
-          setAttachImages={setAttachImages}
-          setUploading={setUploading}
-          showPromptModal={() => setShowPromptModal(true)}
-          scrollToBottom={scrollToBottom}
-          hitBottom={hitBottom}
-          uploading={uploading}
-          showPromptHints={() => {
-            // Click again to close
-            if (promptHints.length > 0) {
-              setPromptHints([]);
-              return;
-            }
-
-            inputRef.current?.focus();
-            setUserInput("/");
-            onSearch("");
-          }}
-        />
         <label
           className={`${styles["chat-input-panel-inner"]} ${
             attachImages.length != 0
